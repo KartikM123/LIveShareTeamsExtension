@@ -24,20 +24,24 @@ export class PopulateTree implements vscode.TreeDataProvider<Team> {
 	getTreeItem(element: Team): vscode.TreeItem {
         console.log("Getting Tree Item!");
 		return element;
-	}
+    }
+    
     getChildren(element?: Team | undefined): Thenable<Team[]> {
+
         console.log("Getting Children!");
-        let wait = true;
         let test = false;
         let allTeams: Team[] = [];
         if (element){
             console.log("Child flow for " +element.teamid + " " + element.label);
             if (test){
-                allTeams.push(new Team("TestChild",
-                "TESTIDSmall",
-                "TestIDBIG", 
+                let child = new Team("Sample_Child",
+                "Sample_Child_id",
+                "Parent_id", 
                 true,
-                vscode.TreeItemCollapsibleState.None));
+                vscode.TreeItemCollapsibleState.None);
+
+                allTeams.push(child);
+
                 console.log("ending early!")
                 return Promise.resolve(allTeams);
             }
@@ -56,14 +60,14 @@ export class PopulateTree implements vscode.TreeDataProvider<Team> {
                 }
                 return Promise.resolve(allTeams);
             });
-        }else {
+        } if (!element) {
             console.log("Parent flow");
-            if (test){
-                allTeams.push(new Team("TestParent",
-                    "None",
-                    "TESTIDBIG", 
-                    false,
-                    vscode.TreeItemCollapsibleState.Collapsed));
+                let parent = new Team("TestParent",
+                "Sample_Node_id",
+                "Sample_Node_id", // because current is parent
+                false,
+                vscode.TreeItemCollapsibleState.Collapsed);
+                allTeams.push(parent);
 
                 
                 console.log("ending early!")
@@ -73,7 +77,6 @@ export class PopulateTree implements vscode.TreeDataProvider<Team> {
             return this.listTeams().then((res) => {
                 console.log(res);
                     console.log("Finished listing") 
-                    wait = false;
                     let count = 0;
                     
                     for (let i = 0; i < res.value.length; i ++){
@@ -86,7 +89,6 @@ export class PopulateTree implements vscode.TreeDataProvider<Team> {
                     console.log("Done here!");
                     return Promise.resolve(allTeams);
             });
-    }
     }
 
     async listTeams(){

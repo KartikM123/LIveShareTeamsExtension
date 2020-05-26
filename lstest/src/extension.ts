@@ -11,32 +11,37 @@ import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
 import secrets from "./secrets.json";
 import {Team, PopulateTree} from "./TreeProvider";
 
+//Interface with LiveShare API
+let liveshare: vsls.LiveShare;
+
+//Authenticate for MSGraph API
 let client: MicrosoftGraph.Client;
 
-let liveshare: vsls.LiveShare;
-//let client: MicrosoftGraph.Client;
+//Register VSCode Commands
 const disposables: vscode.Disposable[] = [];
 
+//Required for manual auth
 const CLIENT_ID = "bd235050-03e5-4972-8bc5-d54115189856";
 const DIRECTORY_ID = "72f988bf-86f1-41af-91ab-2d7cd011db47";
 const OBJECT_ID = "72f988bf-86f1-41af-91ab-2d7cd011db47";
 const REDIRECT_URI = "https://localhost";
-
-const accessToken = secrets.accessToken;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "helloworld" is now active!');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	
+	let newdisposable = vscode.commands.registerCommand('<Your_Command_Name>', () => {
+		vscode.window.showInformationMessage('New Message!');
+	});
+
 	let disposable = vscode.commands.registerCommand('lstest.LS', () => {
+
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Message wow!');
@@ -290,19 +295,20 @@ async function persistentAPI(){
 }
 
 async function liveShareWorkflow(teamID: string, channelID: string) {
+
 	console.log("Initialized LiveShare workflow");
 
 	const liveShareorNull = await vsls.getApi();
 	if (!liveShareorNull) {
 		console.error('Error getting Live Share API');
 		return;
-	}
-
-	console.log("Successfully retrieved Live Share API");
-	liveshare = liveShareorNull!;
-
-
+	} else {
+		console.log("Successfully retrieved Live Share API");
+	}	
 	
+	liveshare = liveShareorNull!;
+	
+	//print event on session
 	liveshare.onDidChangeSession(async (e: vsls.SessionChangeEvent) => {
 		console.log("Session Changed")
 		vscode.window.showInformationMessage("Session Role " + e.session.role);
