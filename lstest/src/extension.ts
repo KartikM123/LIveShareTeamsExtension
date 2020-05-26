@@ -91,6 +91,9 @@ async function initClient(){
 			done(null, secrets.accessToken);
 		},
 	});
+
+	//mess around with these for more fun!
+	
 	//messageGroup(secrets.teamid, secrets.channelid, "Sample")
 	//sendEmail("sample message", "t-kamah@microsoft.com");
 	listTeams();
@@ -113,6 +116,7 @@ async function getUserID(email: string){
 }
 async function listTeams(){
 	try{
+		let req = "/me/joinedTeams";
 		console.log("Recieving Teams");
 		let res = await client.api("/me/joinedTeams")
 		.get();
@@ -324,7 +328,7 @@ async function createLiveshareSession(teamID: string, channelID: string){
 	const newSession = await liveshare.share();
 	if(newSession){
 		//console.log("Successfully shared new Session");
-		//console.log(newSession.toString())
+		//console.log(newSession.toString()
 		vscode.window.showInformationMessage(newSession.toString());
 		messageGroup(teamID, channelID, newSession.toString());
 	} else {

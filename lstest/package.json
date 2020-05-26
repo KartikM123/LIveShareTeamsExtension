@@ -10,11 +10,15 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:simpleStart"
+		"onCommand:<Your_Command_Name>"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
+			{
+				"command": "<Your_Command_Name>",
+				"title": "<Your_Command_Title>"
+			},
 			{
 				"command": "lstest.LS",
 				"title": "LS Test"
